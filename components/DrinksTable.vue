@@ -60,9 +60,5 @@ const columns = [
     label: "Category",
     sortable: true,
   },
-  // {
-  //   key: "",
-  //   label: "Favorite"
-  // }
 ];
 </script>

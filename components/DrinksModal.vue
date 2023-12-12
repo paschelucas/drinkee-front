@@ -4,7 +4,9 @@
       <div class="p-4">
         <img :src="drink.image_url" alt="Drink Image" />
         <h2 class="font-bold text-xl mt-4">{{ drink.name.value }}</h2>
-        <i><p class="mt-2 text-justify">{{ drink.recipe }}</p></i>
+        <i
+          ><p class="mt-2 text-justify">{{ drink.recipe }}</p></i
+        >
       </div>
       <button @click="close">Fechar</button>
     </UModal>
