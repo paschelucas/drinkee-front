@@ -15,14 +15,29 @@ export default {
       return response.data.map((drink: Drink) => {
         return {
             ...drink,
-            categoryText: CategoryNameFormatter.format(drink.category_id)
+            categoryText: CategoryNameFormatter.format(drink.category_id),
+            name: {
+              value: drink.name,
+              class: "hover:bg-gray-800 cursor-pointer"
+            }
         }
       });
     } catch (error) {
       console.error("Erro ao obter drinks.", error);
     }
   },
-  async getCategoryDrinks(id: number) {
+  async searchDrink(q?: string) {
+    const response = await axios.get(`http://127.0.0.1:3333/api/drinks/search?name=${q}`)
 
+    return response.data.map((drink: Drink) => {
+      return {
+          ...drink,
+          categoryText: CategoryNameFormatter.format(drink.category_id),
+          name: {
+            value: drink.name,
+            class: "hover:bg-gray-800 cursor-pointer"
+          }
+      }
+    });
   }
 };

@@ -18,7 +18,8 @@ export default {
 </script>
 <style>
 .title {
-  color: black;
+  color: white;
+  margin-top: 10px;
 }
 
 .mainContainer {
