@@ -1,13 +1,24 @@
 <template>
   <div class="w-3/4">
-    <div class="flex px-3 py-3.5">
-      <UInput v-model="q" placeholder="Filter drinks..." />
+    <div class="flex justify-around px-3 py-3.5">
+      <UInput
+        v-model="q"
+        placeholder="Filter drinks..."
+        icon="i-heroicons-magnifying-glass-20-solid"
+      />
+      <CategorySelect
+        @category-change="loadFilteredDrinks"
+        v-model="selectedCategory"
+        :selectKey="selectKey"
+      />
+      <UButton @click="clearFilters">Clear</UButton>
     </div>
     <UTable
       :rows="filteredRows"
       :columns="columns"
       @row-click="openModal"
       :style="{ borderRadius: '10px', border: '1px solid white' }"
+      :loading="loading"
     >
       <template #name-data="{ row }">
         <div @click="openModal(row)">
@@ -20,7 +31,9 @@
 </template>
 <script setup>
 import DrinkService from "../services/DrinkService.ts";
+import CategoryService from "../services/CategoryService.ts";
 import DrinksModal from "./DrinksModal.vue";
+import CategorySelect from "./CategorySelect.vue";
 import { ref, watchEffect } from "vue";
 
 const drinks = await DrinkService.getDrinks();
@@ -28,12 +41,36 @@ const filteredRows = ref(drinks);
 const q = ref("");
 const selectedDrink = ref(null);
 const modalIsOpen = ref(false);
+const selectedCategory = ref(null);
+const selectKey = ref(0);
+const loading = ref(false);
+
+const loadFilteredDrinks = async (categoryId) => {
+  if (categoryId) {
+    selectedCategory.value = categoryId;
+
+    loading.value = true;
+    filteredRows.value = await CategoryService.getDrinksByCategory(
+      selectedCategory.value
+    );
+    loading.value = false
+
+    return;
+  }
+
+  filteredRows.value = await DrinkService.getDrinks();
+};
+
+const clearFilters = () => {
+  q.value = "";
+  selectedCategory.value = null;
+  selectKey.value += 1;
+  loadFilteredDrinks();
+};
 
 const openModal = (row) => {
   modalIsOpen.value = true;
   selectedDrink.value = row;
-  console.log("[Debug] ref: ", modalIsOpen.value);
-  console.log("[Debug] selected drink: ", selectedDrink);
 };
 
 const close = () => {
@@ -43,11 +80,27 @@ const close = () => {
 watchEffect(async () => {
   if (q.value) {
     const queried = await DrinkService.searchDrink(q.value);
+    if (selectedCategory.value) {
+      loading.value = true;
+      filteredRows.value = await DrinkService.searchDrinkInsideCategory(
+        selectedCategory.value,
+        q.value
+      );
+      loading.value = false
+
+      return;
+    }
+
     filteredRows.value = queried;
-  } else {
-    filteredRows.value = drinks;
+    return;
   }
+
+  filteredRows.value = drinks;
 });
+
+// watchEffect(async () => {
+//   await loadFilteredDrinks(null);
+// });
 
 const columns = [
   {
