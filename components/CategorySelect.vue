@@ -1,43 +1,33 @@
 <template>
-  <USelect
-    color="#AE81FF"
-    variant="outline"
-    :options="categoryOptions"
-    v-model="selectedCategory"
-    option-attribute="name"
-    value-attribute="id"
-    placeholder="Pick a category"
-  />
+  <div>
+    <USelect
+      v-model="selectedCategory"
+      @change="filterByCategory"
+      :options="categories"
+      option-attribute="formattedName"
+      value-attribute="id"
+      placeholder="or pick a category"
+    />
+  </div>
 </template>
 
-<script>
-import CategoryService from "../services/CategoryService.ts";
-import CategoryNameFormatter from "../utils/CategoryNameFormatter.ts";
+<script setup>
+import { ref } from "vue";
+import CategoryService from "../services/CategoryService";
 
-export default {
-  data() {
-    return {
-      selectedCategory: null,
-      categories: [],
-      hasError: false,
-    };
-  },
-  async mounted() {
-    try {
-      this.categories = await CategoryService.getCategories();
-    } catch (error) {
-      this.hasError = true;
-    }
-  },
-  computed: {
-    categoryOptions() {
-      console.log("ola", this.selectedCategory);
-      return this.categories.map((category) => ({
-        id: category.id,
-        name: CategoryNameFormatter.format(category.name),
-      }));
-    },
-  },
+const selectedCategory = ref(null);
+const categories = await CategoryService.getCategories();
+const emits = defineEmits(["category-change"]);
+const props = defineProps(["selectKey"]);
+
+const filterByCategory = () => {
+  emits("category-change", selectedCategory.value);
 };
+
+watch(
+  () => props.selectKey,
+  () => {
+    selectedCategory.value = null;
+  }
+);
 </script>
-<style scoped></style>
