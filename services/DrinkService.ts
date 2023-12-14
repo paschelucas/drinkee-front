@@ -1,16 +1,18 @@
 import axios from "axios";
 import { CategoryNameFormatter } from "#imports";
-type Drink = {
+export type Drink = {
     id: number,
     name: string,
     recipe: string,
     image_url: string,
     category_id: number
 }
+
 export default {
   async getDrinks() {
+    const config = useRuntimeConfig()
     try {
-      const response = await axios.get("http://127.0.0.1:3333/api/drinks");
+      const response = await axios.get(`${config.public.apiUrl}/drinks`);
 
       return response.data.map((drink: Drink) => {
         return {
@@ -27,7 +29,23 @@ export default {
     }
   },
   async searchDrink(q?: string) {
-    const response = await axios.get(`http://127.0.0.1:3333/api/drinks/search?name=${q}`)
+    const config = useRuntimeConfig()
+    const response = await axios.get(`${config.public.apiUrl}/drinks/search?name=${q}`)
+
+    return response.data.map((drink: Drink) => {
+      return {
+          ...drink,
+          categoryText: CategoryNameFormatter.format(drink.category_id),
+          name: {
+            value: drink.name,
+            class: "hover:bg-gray-800 cursor-pointer"
+          }
+      }
+    });
+  },
+  async searchDrinkInsideCategory(category: number, q?: string) {
+    const config = useRuntimeConfig()
+    const response = await axios.get(`${config.public.apiUrl}/drinks/${category}/search?name=${q}`)
 
     return response.data.map((drink: Drink) => {
       return {
