@@ -23,7 +23,6 @@ const localIsOpen = ref(props.isOpen);
 
 watchEffect(() => {
   localIsOpen.value = props.isOpen;
-  console.log("[Debug] Valor de localIsOpen:", localIsOpen.value);
 });
 
 const close = () => {
