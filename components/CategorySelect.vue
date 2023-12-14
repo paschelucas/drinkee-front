@@ -11,16 +11,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import CategoryService from "../services/CategoryService";
 
-const selectedCategory = ref(null);
+const selectedCategory = ref();
 const categories = await CategoryService.getCategories();
 const emits = defineEmits(["category-change"]);
-const props = defineProps(["selectKey"]);
+const props: { selectKey?: number } = defineProps(["selectKey"]);
 
-const filterByCategory = () => {
+const filterByCategory = (): void => {
   emits("category-change", selectedCategory.value);
 };
 

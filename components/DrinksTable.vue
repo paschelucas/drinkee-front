@@ -29,23 +29,23 @@
     <DrinksModal :isOpen="modalIsOpen" @close="close" :drink="selectedDrink" />
   </div>
 </template>
-<script setup>
-import DrinkService from "../services/DrinkService.ts";
-import CategoryService from "../services/CategoryService.ts";
+<script setup lang="ts">
+import DrinkService, { type Drink } from "../services/DrinkService";
+import CategoryService from "../services/CategoryService";
 import DrinksModal from "./DrinksModal.vue";
 import CategorySelect from "./CategorySelect.vue";
 import { ref, watchEffect } from "vue";
 
-const drinks = await DrinkService.getDrinks();
-const filteredRows = ref(drinks);
-const q = ref("");
-const selectedDrink = ref(null);
-const modalIsOpen = ref(false);
-const selectedCategory = ref(null);
-const selectKey = ref(0);
-const loading = ref(false);
+const drinks: Drink[] | undefined = await DrinkService.getDrinks();
+const filteredRows: Ref<Drink[] | undefined> = ref(drinks);
+const q: Ref<string> = ref("");
+const selectedDrink: Ref<Drink | null> = ref(null);
+const modalIsOpen: Ref<boolean> = ref(false);
+const selectedCategory: Ref<number | null> = ref(null);
+const selectKey: Ref<number> = ref(0);
+const loading: Ref<boolean> = ref(false);
 
-const loadFilteredDrinks = async (categoryId) => {
+const loadFilteredDrinks = async (categoryId?: number): Promise<void> => {
   if (categoryId) {
     selectedCategory.value = categoryId;
 
@@ -53,7 +53,7 @@ const loadFilteredDrinks = async (categoryId) => {
     filteredRows.value = await CategoryService.getDrinksByCategory(
       selectedCategory.value
     );
-    loading.value = false
+    loading.value = false;
 
     return;
   }
@@ -68,12 +68,12 @@ const clearFilters = () => {
   loadFilteredDrinks();
 };
 
-const openModal = (row) => {
+const openModal = (row: Drink): void => {
   modalIsOpen.value = true;
   selectedDrink.value = row;
 };
 
-const close = () => {
+const close = (): void => {
   modalIsOpen.value = false;
 };
 
@@ -86,7 +86,7 @@ watchEffect(async () => {
         selectedCategory.value,
         q.value
       );
-      loading.value = false
+      loading.value = false;
 
       return;
     }

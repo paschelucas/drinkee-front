@@ -1,15 +1,20 @@
 import axios from "axios";
 import { CategoryNameFormatter } from "#imports";
+
 export type Drink = {
     id: number,
-    name: string,
+    name: string | {
+      value: string,
+      class: string
+    },
     recipe: string,
     image_url: string,
-    category_id: number
+    category_id: number,
+    categoryText?: string
 }
 
 export default {
-  async getDrinks() {
+  async getDrinks(): Promise<Drink[] | undefined> {
     const config = useRuntimeConfig()
     try {
       const response = await axios.get(`${config.public.apiUrl}/drinks`);
@@ -28,7 +33,7 @@ export default {
       console.error("Erro ao obter drinks.", error);
     }
   },
-  async searchDrink(q?: string) {
+  async searchDrink(q?: string): Promise<Drink[]> {
     const config = useRuntimeConfig()
     const response = await axios.get(`${config.public.apiUrl}/drinks/search?name=${q}`)
 
@@ -43,7 +48,7 @@ export default {
       }
     });
   },
-  async searchDrinkInsideCategory(category: number, q?: string) {
+  async searchDrinkInsideCategory(category: number, q?: string): Promise<Drink[]> {
     const config = useRuntimeConfig()
     const response = await axios.get(`${config.public.apiUrl}/drinks/${category}/search?name=${q}`)
 
