@@ -5,7 +5,7 @@ import type { Drink } from "./DrinkService";
 type Category = {
   id: number;
   name: string;
-  formattedName?: string
+  formattedName?: string;
 };
 
 export default {

@@ -5,11 +5,11 @@
   </div>
 </template>
 <script>
-import DrinksTable from "../components/DrinksTable.vue"
+import DrinksTable from "../components/DrinksTable.vue";
 
 export default {
   components: {
-    DrinksTable
+    DrinksTable,
   },
 };
 </script>
@@ -21,8 +21,8 @@ export default {
 }
 
 .mainContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

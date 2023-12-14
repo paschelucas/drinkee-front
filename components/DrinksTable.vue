@@ -93,7 +93,7 @@ watchEffect(async () => {
       selectedCategory.value as number,
       q.value
     );
-    
+
     loading.value = false;
     return;
   }
@@ -103,7 +103,7 @@ watchEffect(async () => {
 
 const columns = [
   {
-    key: "name",
+    key: "name.value",
     label: "Name",
     sortable: true,
   },

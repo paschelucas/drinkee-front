@@ -17,8 +17,10 @@
 import { defineProps, defineEmits } from "vue";
 import { ref } from "vue";
 
-
-const props: { isOpen?: boolean, drink?: any } = defineProps(["isOpen", "drink"]);
+const props: { isOpen?: boolean; drink?: any } = defineProps([
+  "isOpen",
+  "drink",
+]);
 const emits = defineEmits(["close"]);
 const localIsOpen = ref(props.isOpen);
 watchEffect(() => {
@@ -26,7 +28,7 @@ watchEffect(() => {
 });
 
 const close = () => {
-  console.log('DRINK => ', props.drink)
+  console.log("DRINK => ", props.drink);
   emits("close");
 };
 </script>
