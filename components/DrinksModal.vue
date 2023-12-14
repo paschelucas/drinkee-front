@@ -28,7 +28,6 @@ watchEffect(() => {
 });
 
 const close = () => {
-  console.log("DRINK => ", props.drink);
   emits("close");
 };
 </script>
