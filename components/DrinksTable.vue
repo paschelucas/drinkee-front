@@ -103,14 +103,12 @@ watchEffect(async () => {
 
 const columns = [
   {
-    key: "name.value",
+    key: "name",
     label: "Name",
-    sortable: true,
   },
   {
     key: "categoryText",
     label: "Category",
-    sortable: true,
   },
 ];
 </script>
