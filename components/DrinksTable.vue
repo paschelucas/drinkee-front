@@ -78,29 +78,28 @@ const close = (): void => {
 };
 
 watchEffect(async () => {
-  if (q.value) {
-    const queried = await DrinkService.searchDrink(q.value);
-    if (selectedCategory.value) {
-      loading.value = true;
-      filteredRows.value = await DrinkService.searchDrinkInsideCategory(
-        selectedCategory.value,
-        q.value
-      );
-      loading.value = false;
+  const hasQueryAndCategory = q.value && selectedCategory.value;
+  const hasQuery = q.value && !selectedCategory.value;
 
-      return;
-    }
+  if (hasQuery) {
+    filteredRows.value = await DrinkService.searchDrink(q.value);
+    return;
+  }
 
-    filteredRows.value = queried;
+  if (hasQueryAndCategory) {
+    loading.value = true;
+
+    filteredRows.value = await DrinkService.searchDrinkInsideCategory(
+      selectedCategory.value as number,
+      q.value
+    );
+    
+    loading.value = false;
     return;
   }
 
   filteredRows.value = drinks;
 });
-
-// watchEffect(async () => {
-//   await loadFilteredDrinks(null);
-// });
 
 const columns = [
   {
